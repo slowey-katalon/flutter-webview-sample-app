@@ -36,12 +36,14 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _controller =
         WebViewController()
-          // ..clearCache()
           ..setJavaScriptMode(JavaScriptMode.unrestricted)
           ..setNavigationDelegate(
             NavigationDelegate(
               onNavigationRequest: (NavigationRequest request) {
-                _handleUrlChange(request.url);
+                if (request.url.startsWith('myapp://success')) {
+                  _handleUrlChange(request.url);
+                  return NavigationDecision.prevent;
+                }
                 return NavigationDecision.navigate;
               },
               onPageFinished: (String url) {
