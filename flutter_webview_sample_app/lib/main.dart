@@ -40,23 +40,17 @@ class _LoginScreenState extends State<LoginScreen> {
           ..setJavaScriptMode(JavaScriptMode.unrestricted)
           ..setNavigationDelegate(
             NavigationDelegate(
-              onNavigationRequest: (request) {
+              onNavigationRequest: (NavigationRequest request) {
                 _handleUrlChange(request.url);
                 return NavigationDecision.navigate;
               },
               onPageFinished: (String url) {
-                setState(() => _isLoading = false);
+                setState(() {
+                  _isLoading = false;
+                });
               },
-              onWebResourceError: (error) {
-                _showError("Error: ${error.description}");
-              },
-            ),
-          )
-          // Bỏ qua lỗi SSL (chỉ dùng cho môi trường test)
-          ..setPlatformNavigationDelegate(
-            PlatformNavigationDelegate(
-              onSslError: (controller, sslError) {
-                controller.proceed(); // Tiếp tục tải trang dù có lỗi SSL
+              onWebResourceError: (WebResourceError error) {
+                _showError("Failed to load page: ${error.description}");
               },
             ),
           )
